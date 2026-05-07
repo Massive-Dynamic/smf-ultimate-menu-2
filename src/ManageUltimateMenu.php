@@ -78,7 +78,7 @@ class ManageUltimateMenu
 
 	private function listButtons(): void
 	{
-		global $context, $txt, $scripturl, $sourcedir;
+		global $context, $txt, $scripturl, $sourcedir, $smcFunc;
 
 		$button_names = $this->um->getButtonNames();
 		$listOptions = [
@@ -130,7 +130,7 @@ class ManageUltimateMenu
 								$txt['um_menu_' . $rowData['position']],
 								isset($button_names[$rowData['parent']])
 									? $button_names[$rowData['parent']][1]
-									: ucwords($rowData['parent'])
+									: '<tt>' . $smcFunc['htmlspecialchars']($rowData['parent']) . '</tt>'
 							),
 					],
 					'sort' => [

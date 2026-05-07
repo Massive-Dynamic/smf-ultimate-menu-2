@@ -160,7 +160,7 @@ class UltimateMenu
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$buttons['um_button_' . $row['id_button']] = json_encode([
-				'name' => $row['name'],
+				'name' => $smcFunc['htmlspecialchars']($row['name']),
 				'target' => $row['target'],
 				'type' => $row['type'],
 				'position' => $row['position'],
