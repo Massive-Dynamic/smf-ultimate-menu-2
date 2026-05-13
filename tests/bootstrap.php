@@ -1,11 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 // What are you doing here, SMF?
 define('SMF', 1);
 
-global $context, $modSettings, $smcFunc, $settings, $txt, $user_info;
+global $context, $modSettings, $smcFunc, $settings, $txt, $user_info, $scripturl, $sourcedir, $boarddir;
+
+$sourcePath = is_dir('./src/Sources') ? './src/Sources' : './src';
+$langPath = is_dir('./src/languages') ? './src/languages' : './src';
 
 // Set up necessary global variables
 $context = [
@@ -18,7 +21,18 @@ $context = [
 	'html_headers' => '',
 	'admin_menu_name' => 'Admin Menu',
 ];
-$settings = ['default_theme_url' => '/theme/url'];
+$settings = [
+	'theme_dir' => './src/Themes/default',
+	'default_theme_dir' => './src/Themes/default',
+	'theme_url' => dirname(__DIR__) . '/Themes/default',
+	'default_theme_url' => dirname(__DIR__) . '/Themes/default',
+	'images_url' => dirname(__DIR__) . '/Themes/default/images',
+];
+
+$scripturl = dirname(__DIR__);
+$sourcedir = './vendor/simplemachines/smf/Sources';
+$boarddir = './vendor/simplemachines/smf';
+
 $txt = [
 	'admin_menu_title' => 'Admin Menu Title',
 	'admin_menu' => 'Admin Menu',
@@ -28,49 +42,49 @@ $txt = [
 	'parent_guests_only' => 'Guests',
 	'parent_members_only' => 'Members',
 	'login' => '',
+	'logout' => '',
+	'signup' => '',
 ];
 $user_info = ['is_admin' => true, 'is_guest' => false, 'language' => '', 'id' => 1, 'name' => 'Test User', 'groups' => [0], 'permissions' => []];
 $modSettings = ['lastActive' => 0, 'settings_updated' => 0, 'postmod_active' => false];
 
-global $scripturl; 
-$scripturl = dirname(__DIR__);
-
-$smcFunc['db_query'] = function ($name, $query, $args)
+$smcFunc['db_query'] = function($name, $query, $args)
 {
 	global $current_item, $modSettings;
 
 	$current_item = 0;
 
-	if (isset($args['variable']) && $args['variable'] == 'integrate_menu_buttons')
+	if (isset($args['variable']) && $args['variable'] == 'integrate_menu_buttons') {
 		return [[$modSettings[$args['variable']] ?? null]];
+	}
 
 	return [['']];
 };
-$smcFunc['db_fetch_assoc'] = function ($request)
+$smcFunc['db_fetch_assoc'] = function($request)
 {
 	global $current_item;
 
 	return $request[$current_item++] ?? null;
 };
-$smcFunc['db_fetch_row'] = function ($request)
+$smcFunc['db_fetch_row'] = function($request)
 {
 	global $current_item;
 
 	return $request[$current_item++] ?? null;
 };
-$smcFunc['db_free_result'] = function (): void
+$smcFunc['db_free_result'] = function(): void
 {
 };
-$smcFunc['db_insert'] = function (): void
+$smcFunc['db_insert'] = function(): void
 {
 };
 $smcFunc['htmltrim'] = fn(string $string): string => trim($string);
 $smcFunc['htmlspecialchars'] = fn(string $string): string => htmlspecialchars($string, ENT_QUOTES);
 
-require_once './src/ManageUltimateMenu.php';
-require_once './src/Subs-UltimateMenu.php';
-require_once './src/Class-UltimateMenu.php';
-require_once './src/ManageUltimateMenu.english.php';
+require_once $sourcePath . '/ManageUltimateMenu.php';
+require_once $sourcePath . '/Subs-UltimateMenu.php';
+require_once $sourcePath . '/Class-UltimateMenu.php';
+require_once $langPath . '/ManageUltimateMenu.english.php';
 require_once './vendor/autoload.php';
 
 require_once './vendor/simplemachines/smf/Sources/Load.php';
